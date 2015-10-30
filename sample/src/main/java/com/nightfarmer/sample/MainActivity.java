@@ -1,10 +1,13 @@
 package com.nightfarmer.sample;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -35,24 +38,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        List<MediaItem> list = new ArrayList<>();
-        MediaItem mediaItem = new MediaItem();
-        mediaItem.setType(MediaItem.PHOTO);
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.com"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comxxxx"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comyyy"));
-        list.add(mediaItem);
-
-//        final MediaAdapter adapter = new MediaAdapter(list);
-//        layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(layout);
-//        recyclerView.setAdapter(adapter);
-        final MediaPickerAdapter adapter = mediaPickerView.getAdapter();
-        adapter.dataList.addAll(list);
+//        List<MediaItem> list = new ArrayList<>();
+//        MediaItem mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem(MediaItem.PHOTO, Uri.parse("content://media/external/images/media/117345"));
+//        list.add(mediaItem);
+//
+////        final MediaAdapter adapter = new MediaAdapter(list);
+////        layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+////        recyclerView.setLayoutManager(layout);
+////        recyclerView.setAdapter(adapter);
+//        final MediaPickerAdapter adapter = mediaPickerView.getAdapter();
+////        adapter.dataList.addAll(list);
     }
 
     @Override
@@ -75,5 +94,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("xx", "onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
+        mediaPickerView.handleResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("xx", "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i("xx", "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i("xx", "onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i("xx", "onPause");
+        super.onPause();
     }
 }

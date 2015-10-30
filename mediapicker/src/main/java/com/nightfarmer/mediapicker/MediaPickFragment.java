@@ -1,7 +1,6 @@
 package com.nightfarmer.mediapicker;
 
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -17,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +43,21 @@ public class MediaPickFragment extends Fragment implements LoaderManager.LoaderC
 //        recyclerView.setAdapter(new MediaItemGridAdapter(dataList));
 
         List<MediaItem> list = new ArrayList<>();
-        MediaItem mediaItem = new MediaItem();
-        mediaItem.setType(MediaItem.PHOTO);
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.com"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comxxxx"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comyyy"));
-        list.add(mediaItem);
+//        MediaItem mediaItem = new MediaItem();
+//        mediaItem.setType(MediaItem.PHOTO);
+//        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.com"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem();
+//        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comxxxx"));
+//        list.add(mediaItem);
+//        mediaItem = new MediaItem();
+//        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comyyy"));
+//        list.add(mediaItem);
         dataList.addAll(list);
 
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        final MediaPickerAdapter selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL);
+        final MediaPickerAdapter selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL, MediaImageLoaderImpl.getInstance(getContext()));
         selectedList = selectedAdapter.dataList;
         recyclerViewSelected.setAdapter(selectedAdapter);
         Log.i("xx","onCreateView");

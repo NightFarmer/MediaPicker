@@ -2,12 +2,17 @@ package com.nightfarmer.mediapicker;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 
 import java.util.List;
 
@@ -16,42 +21,49 @@ import java.util.List;
  */
 public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGridAdapter.GridItemHolder> {
 
-    //    List<MediaItem> dataList;
     private MediaItemClickListener mediaItemClickListener;
 
-    public MediaItemGridAdapter(Context context, Cursor c, int flags) {
+    private MediaImageLoaderImpl mMediaImageLoader;
+
+    private List<MediaItem> selectedItemList;
+
+    public MediaItemGridAdapter(Context context, Cursor c, int flags, MediaImageLoaderImpl mMediaImageLoader) {
         super(context, c, flags);
+        this.mMediaImageLoader = mMediaImageLoader;
     }
 
     @Override
     public GridItemHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
-        final TextView textView = new TextView(parent.getContext());
-        parent.addView(textView);
-        final ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
-        layoutParams.height = parent.getWidth() / 3;
-        textView.setOnClickListener(new View.OnClickListener() {
+        if (viewType == MediaItemClickListener.TYPE_START) {
+            View inflate_camera = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_camera_item, parent, false);
+            return new GridItemHolder(inflate_camera);
+        }
+        final View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_media_griditem, parent, false);
+        GridItemHolder gridItemHolder = new GridItemHolder(inflate);
+        inflate.setTag(R.id.draweView, gridItemHolder.draweView);
+        gridItemHolder.draweView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mediaItemClickListener != null) {
-                    mediaItemClickListener.onClick(v, viewType);
+                    mediaItemClickListener.onClick(inflate, viewType);
                 }
             }
         });
-        return new GridItemHolder(textView);
-    }
+        gridItemHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (onCheckedListener != null) {
+                    MediaItem tag = (MediaItem) inflate.getTag();
+                    if (tag != null && tag.isChecked != isChecked) {
+                        tag.isChecked = isChecked;
+                        onCheckedListener.onChecked(isChecked, inflate);
+                    }
+                }
+            }
+        });
 
-//    @Override
-//    public void onBindViewHolder(GridItemHolder holder, int position) {
-//        switch (getItemViewType(position)) {
-//            case MediaItemClickListener.TYPE_START:
-//
-//                break;
-//            case MediaItemClickListener.TYPE_MEDIA:
-//                holder.itemView.setTag(dataList.get(position - 1));
-//                holder.textView.setText(dataList.get(position - 1).getUriOrigin().toString());
-//                break;
-//        }
-//    }
+        return gridItemHolder;
+    }
 
     @Override
     protected void onContentChanged() {
@@ -71,13 +83,26 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
                 break;
             case MediaItemClickListener.TYPE_MEDIA:
                 if (!mDataValid && position < mCursor.getCount() - 1) {
-                    throw new IllegalStateException("this should only be called when the cursor is valid");
+                    Log.e("MediaItemGridAdapter", "this should only be called when the cursor is valid");
+//                    throw new IllegalStateException("this should only be called when the cursor is valid");
                 }
                 if (!mCursor.moveToPosition(position - 1)) {
-                    throw new IllegalStateException("couldn't move cursor to position " + position);
+                    Log.e("MediaItemGridAdapter", "couldn't move cursor to position " + position);
+//                    throw new IllegalStateException("couldn't move cursor to position " + position);
                 }
-                String id = mCursor.getString(mCursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-                holder.textView.setText(id);
+//                String id = mCursor.getString(mCursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+//                holder.textView.setText(MediaUtils.getPhotoUri(mCursor).toString());
+//                holder.draweView.setImageURI(MediaUtils.getPhotoUri(mCursor));
+//                ImageLoader.getInstance().displayImage(MediaUtils.getPhotoUri(mCursor).toString(), holder.draweView);
+//                holder.draweView.setImageURI(MediaUtils.getPhotoUri(mCursor));
+                mMediaImageLoader.displayImage(MediaUtils.getPhotoUri(mCursor), holder.draweView);
+                MediaItem mediaItem = new MediaItem(MediaItem.PHOTO, MediaUtils.getPhotoUri(mCursor));
+                holder.itemView.setTag(mediaItem);
+//                holder.textView.setText(mediaItem.getPathOrigin(holder.textView.getContext()));
+//                holder.checkImage.setImageResource(R.drawable.ab_picker_camera);
+                boolean checked = selectedItemList != null && selectedItemList.indexOf(mediaItem) != -1;
+                mediaItem.isChecked = checked;
+                holder.checkBox.setChecked(checked);
                 break;
         }
     }
@@ -88,11 +113,13 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
     }
 
     public class GridItemHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        ImageView draweView;
+        CheckBox checkBox;
 
         public GridItemHolder(View itemView) {
             super(itemView);
-            this.textView = (TextView) itemView;
+            draweView = (ImageView) itemView.findViewById(R.id.draweView);
+            checkBox = (CheckBox) itemView.findViewById(R.id.checkImage);
         }
     }
 
@@ -100,5 +127,17 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
         this.mediaItemClickListener = mediaItemClickListener;
     }
 
+    public interface OnCheckedListener {
+        void onChecked(boolean checked, View view);
+    }
 
+    OnCheckedListener onCheckedListener;
+
+    public void setOnCheckedListener(OnCheckedListener onCheckedListener) {
+        this.onCheckedListener = onCheckedListener;
+    }
+
+    public void setSelectedItemList(List<MediaItem> selectedItemList) {
+        this.selectedItemList = selectedItemList;
+    }
 }

@@ -1,17 +1,25 @@
 package com.nightfarmer.mediapicker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import static com.nightfarmer.mediapicker.MediaPickerAdapter.*;
+import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
+import com.nostra13.universalimageloader.utils.StorageUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+
 
 /**
  * 图片选择控件
@@ -19,9 +27,13 @@ import static com.nightfarmer.mediapicker.MediaPickerAdapter.*;
  */
 public class MediaPickerView extends RelativeLayout {
 
+    public static final int REQUST_CODE = MediaPickerView.class.hashCode();
+    public static final String RESULT = "MediaPickerViewResult";
+
     private int orientation;
 
     MediaPickerAdapter adapter;
+    RecyclerView recyclerView;
 
     public MediaPickerView(Context context) {
         this(context, null);
@@ -46,11 +58,11 @@ public class MediaPickerView extends RelativeLayout {
 
     @Override
     protected void onFinishInflate() {
-        final RecyclerView recyclerView = new RecyclerView(getContext());
+        recyclerView = new RecyclerView(getContext());
         addView(recyclerView);
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), orientation, false));
-        adapter = new MediaPickerAdapter(orientation);
+        adapter = new MediaPickerAdapter(orientation, MediaImageLoaderImpl.getInstance(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.setMediaItemClickListener(new MediaPickedItemClickListener());
         final ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
@@ -63,15 +75,34 @@ public class MediaPickerView extends RelativeLayout {
         return adapter;
     }
 
-    public class MediaPickedItemClickListener implements MediaItemClickListener{
+    public void handleResult(int requestCode, int resultCode, Intent data) {
+        if (REQUST_CODE != requestCode) return;
+        if (resultCode != Activity.RESULT_OK) return;
+        ArrayList<MediaItem> result = null;
+        try {
+            result = data.getParcelableArrayListExtra(MediaPickerView.RESULT);
+        } catch (Exception e) {
+        }
+        if (result == null) return;
+        adapter.dataList = result;
+        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(0);
+//        File bmp_catch = StorageUtils.getIndividualCacheDirectory(getContext(), "bmp_catch");
+//        bmp_catch.delete();
+        Log.i("", result.size() + "");
+    }
+
+    public class MediaPickedItemClickListener implements MediaItemClickListener {
 
         @Override
         public void onClick(View v, int type) {
             switch (type) {
                 case TYPE_END:
                     //add
-                    Toast.makeText(v.getContext(), "add", Toast.LENGTH_SHORT).show();
-                    v.getContext().startActivity(new Intent(v.getContext(), MediaPickActivity.class));
+                    Activity activity = (Activity) v.getContext();
+                    Intent intent = new Intent(v.getContext(), MediaPickActivity.class);
+                    intent.putParcelableArrayListExtra(RESULT, adapter.dataList);
+                    activity.startActivityFromChild(activity, intent, REQUST_CODE);
                     break;
                 case TYPE_MEDIA:
                     //show

@@ -1,21 +1,23 @@
 package com.nightfarmer.mediapicker;
 
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,68 +32,115 @@ public class MediaPickActivity extends AppCompatActivity implements LoaderManage
     List<MediaItem> selectedList;
 
     MediaItemGridAdapter adapter;
+    MediaPickerAdapter selectedAdapter;
+    TextView okButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_pick);
-//        setContentView(R.layout.laytou_content);
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.container, new MediaPickFragment())
-//                .commit();
+        ArrayList<MediaItem> parcelableArrayListExtra = getIntent().getParcelableArrayListExtra(MediaPickerView.RESULT);
 
+        okButton = (TextView) findViewById(R.id.ok);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerViewSelected = (RecyclerView) findViewById(R.id.recyclerViewSelected);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        adapter = new MediaItemGridAdapter(this, null, 0);
+        final MediaImageLoaderImpl mMediaImageLoader = MediaImageLoaderImpl.getInstance(getApplicationContext());
+        adapter = new MediaItemGridAdapter(this, null, 0, mMediaImageLoader);
         recyclerView.setAdapter(adapter);
 
-        List<MediaItem> list = new ArrayList<>();
-        MediaItem mediaItem = new MediaItem();
-        mediaItem.setType(MediaItem.PHOTO);
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.com"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comxxxx"));
-        list.add(mediaItem);
-        mediaItem = new MediaItem();
-        mediaItem.setUriOrigin(Uri.parse("http://www.baidu.comyyy"));
-        list.add(mediaItem);
-        dataList.addAll(list);
+        adapter.setMediaItemClickListener(new MediaItemClickListener() {
+            @Override
+            public void onClick(View v, int type) {
+                Log.i("xx", "onClick" + type);
+            }
+        });
+        adapter.setOnCheckedListener(new MediaItemGridAdapter.OnCheckedListener() {
+            @Override
+            public void onChecked(boolean checked, View view) {
+                Log.i("xx", "checked" + checked);
+                final MediaItem tag = (MediaItem) view.getTag();
+                if (checked) {
+                    View img = (View) view.getTag(R.id.draweView);
+                    if (img != null) {
+                        img.setDrawingCacheEnabled(true);
+                        tag.setCache(img.getDrawingCache(), MediaPickActivity.this);
+                        img.setDrawingCacheEnabled(false);
+                    }
+                    selectedList.add(tag);
+                    selectedAdapter.notifyItemInserted(selectedList.indexOf(tag));
+                    recyclerViewSelected.scrollToPosition(selectedList.size());
+                } else {
+                    final int position = selectedList.indexOf(tag);
+                    selectedList.remove(tag);
+                    selectedAdapter.notifyItemRemoved(position);
+                    recyclerViewSelected.scrollToPosition(position);
+                }
+                onSelectedItemListChanged();
+            }
+        });
 
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        final MediaPickerAdapter selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL);
+        selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL, mMediaImageLoader);
         selectedList = selectedAdapter.dataList;
         recyclerViewSelected.setAdapter(selectedAdapter);
-
-
-        getSupportLoaderManager().initLoader(0,null, this);
+        selectedAdapter.setMediaItemClickListener(new MediaItemClickListener() {
+            @Override
+            public void onClick(View v, int type) {
+                if (MediaItemClickListener.TYPE_MEDIA == type) {
+                    final int indexOf = selectedList.indexOf(v.getTag());
+                    if (indexOf < 0) return;
+                    selectedList.remove(indexOf);
+                    selectedAdapter.notifyItemRemoved(indexOf);
+                    adapter.notifyDataSetChanged();
+                    onSelectedItemListChanged();
+                }
+            }
+        });
+        adapter.setSelectedItemList(selectedList);
+        selectedList.addAll(parcelableArrayListExtra);
+        getSupportLoaderManager().initLoader(0, null, this);
+        onSelectedItemListChanged();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_media_pick, menu);
-        return true;
+    private void onSelectedItemListChanged() {
+        String str_ok = getResources().getString(R.string.ok);
+        final int size = selectedList.size();
+        String count = size > 0 ? "(" + size + ")" : "";
+        okButton.setText(str_ok + count);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onOk(View view){
+        Intent intent=getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(MediaPickerView.RESULT, (ArrayList<? extends Parcelable>) selectedList);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_media_pick, menu);
+//        return true;
+//    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     @Override

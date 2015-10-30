@@ -3,16 +3,29 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="3dp"
+    android:layout_marginRight="3dp"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/simpleDraweeView"
-        fresco:actualImageScaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <com.nightfarmer.mediapicker.MediaView
+        android:layout_centerInParent="true"
+        android:id="@+id/draweView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:layout_margin="3dp"
         />
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
+    <CheckBox
+        android:layout_margin="5dp"
+        android:id="@+id/checkImage"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:button="@null"
+        android:background="@drawable/media_check_btn"
+        android:layout_alignRight="@id/draweView"
+        android:layout_alignTop="@id/draweView"
+        />
+
 </RelativeLayout>
