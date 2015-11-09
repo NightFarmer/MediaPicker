@@ -1,9 +1,17 @@
 package com.nightfarmer.mediapicker;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by zhangfan on 2015/10/28.
@@ -21,7 +29,6 @@ public class MediaUtils {
         String id = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
         return Uri.withAppendedPath(uri, id);
     }
-
 
 
     /**
@@ -73,4 +80,26 @@ public class MediaUtils {
             }
         }
     }
+
+    /**
+     * Create an default file for save image from camera.
+     *
+     * @return
+     * @throws IOException
+     */
+    public static File createDefaultImageFile(Context context) throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + ".jpg";
+//        File storageDir = Environment
+//                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + File.separator + "Camera");
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        prePath = storageDir;
+        return new File(storageDir, imageFileName);
+    }
+
+    public static File prePath;
 }

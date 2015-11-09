@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class MediaPickerView extends RelativeLayout {
 
-    public static final int REQUST_CODE = MediaPickerView.class.hashCode();
+    public static final int REQUST_CODE = MediaPickerView.class.hashCode() % 10000;
     public static final String RESULT = "MediaPickerViewResult";
 
     private int orientation;
@@ -102,7 +102,7 @@ public class MediaPickerView extends RelativeLayout {
                     Activity activity = (Activity) v.getContext();
                     Intent intent = new Intent(v.getContext(), MediaPickActivity.class);
                     intent.putParcelableArrayListExtra(RESULT, adapter.dataList);
-                    activity.startActivityFromChild(activity, intent, REQUST_CODE);
+                    activity.startActivityForResult(intent, REQUST_CODE);
                     break;
                 case TYPE_MEDIA:
                     //show

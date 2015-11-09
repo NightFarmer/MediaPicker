@@ -100,10 +100,11 @@ public class MediaPickerAdapter extends RecyclerView.Adapter<MediaPickerAdapter.
                                     view.setDrawingCacheEnabled(true);
                                     tag.setCache(view.getDrawingCache(), holder.imageView.getContext());
                                     view.setDrawingCacheEnabled(false);
+                                    final Bitmap cache = tag.getCache(holder.imageView.getContext());
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            holder.imageView.setImageBitmap(tag.getCache(holder.imageView.getContext()));
+                                            holder.imageView.setImageBitmap(cache);
                                         }
                                     });
                                 }

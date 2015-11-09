@@ -34,6 +34,7 @@ package com.nightfarmer.mediapicker;
  */
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -78,7 +79,7 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
      * This field should be made private, so it is hidden from the SDK.
      * {@hide}
      */
-    protected Context mContext;
+    protected Activity mContext;
 
     /**
      * The row id column
@@ -126,11 +127,11 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
      * @param flags Flags used to determine the behavior of the adapter;
      *              Currently it accept {@link #FLAG_REGISTER_CONTENT_OBSERVER}.
      */
-    public RecyclerViewCursorAdapter(Context context, Cursor c, int flags) {
+    public RecyclerViewCursorAdapter(Activity context, Cursor c, int flags) {
         init(context, c, flags);
     }
 
-    void init(Context context, Cursor c, int flags) {
+    void init(Activity context, Cursor c, int flags) {
 
         boolean cursorPresent = c != null;
         mCursor = c;

@@ -173,9 +173,9 @@ public class MediaItem implements Parcelable{
 //        cache.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
 //        byte[] cacheBytes = baos.toByteArray();//创建分配字节数组
 
-        if (null != cache && !cache.isRecycled()) {
-            cache.recycle();
-        }
+//        if (null != cache && !cache.isRecycled()) {
+//            cache.recycle();
+//        }
 
 //        dest.writeByteArray(cacheBytes);
         dest.writeInt(type);

@@ -1,7 +1,14 @@
 package com.nightfarmer.mediapicker;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.FileObserver;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +21,8 @@ import android.widget.TextView;
 
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,7 +36,9 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
 
     private List<MediaItem> selectedItemList;
 
-    public MediaItemGridAdapter(Context context, Cursor c, int flags, MediaImageLoaderImpl mMediaImageLoader) {
+    private static final int REQUEST_PHOTO_CAPTURE = 100;
+
+    public MediaItemGridAdapter(Activity context, Cursor c, int flags, MediaImageLoaderImpl mMediaImageLoader) {
         super(context, c, flags);
         this.mMediaImageLoader = mMediaImageLoader;
     }
@@ -36,6 +47,12 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
     public GridItemHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         if (viewType == MediaItemClickListener.TYPE_START) {
             View inflate_camera = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_camera_item, parent, false);
+            inflate_camera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    takePhoto();
+                }
+            });
             return new GridItemHolder(inflate_camera);
         }
         final View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_media_griditem, parent, false);
@@ -140,4 +157,44 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
     public void setSelectedItemList(List<MediaItem> selectedItemList) {
         this.selectedItemList = selectedItemList;
     }
+
+    private void takePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+//            File file = mMediaOptions.getPhotoFile();
+            File file = null;
+            if (file == null) {
+                try {
+                    file = MediaUtils.createDefaultImageFile(mContext);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (file != null) {
+//                mPhotoFileCapture = file;
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(file));
+                mContext.startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
+//                mFileObserverTask = new FileObserverTask();
+//                mFileObserverTask.execute();
+            }
+        }
+    }
+
+//    private class FileObserverTask extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            if (isCancelled()) return null;
+//            if (mFileObserver == null) {
+//                mFileObserver = new RecursiveFileObserver(Environment
+//                        .getExternalStorageDirectory().getAbsolutePath(),
+//                        FileObserver.CREATE);
+//                mFileObserver
+//                        .setFileCreatedListener(mOnFileCreatedListener);
+//            }
+//            mFileObserver.startWatching();
+//            return null;
+//        }
+//    }
 }
