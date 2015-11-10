@@ -36,7 +36,10 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
 
     private List<MediaItem> selectedItemList;
 
+    File fileHolder;
+
     private static final int REQUEST_PHOTO_CAPTURE = 100;
+//    private FileObserverTask mFileObserverTask;
 
     public MediaItemGridAdapter(Activity context, Cursor c, int flags, MediaImageLoaderImpl mMediaImageLoader) {
         super(context, c, flags);
@@ -162,36 +165,43 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
 //            File file = mMediaOptions.getPhotoFile();
-            File file = null;
-            if (file == null) {
-                try {
-                    file = MediaUtils.createDefaultImageFile(mContext);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                fileHolder = MediaUtils.createDefaultImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (file != null) {
+            if (fileHolder != null) {
 //                mPhotoFileCapture = file;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(file));
+                        Uri.fromFile(fileHolder));
                 mContext.startActivityForResult(takePictureIntent, REQUEST_PHOTO_CAPTURE);
+//                String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//                MediaFileObserver mediaFileObserver = new MediaFileObserver(MediaUtils.getStorageDir().getPath(), FileObserver.CREATE);
+//                mediaFileObserver.startWatching();
+//                mFileObserverTask = new FileObserverTask();
+//                mFileObserverTask.execute();
 //                mFileObserverTask = new FileObserverTask();
 //                mFileObserverTask.execute();
             }
         }
     }
 
+//    RecursiveFileObserver mFileObserver;
+//
 //    private class FileObserverTask extends AsyncTask<Void, Void, Void> {
 //
 //        @Override
 //        protected Void doInBackground(Void... params) {
 //            if (isCancelled()) return null;
 //            if (mFileObserver == null) {
-//                mFileObserver = new RecursiveFileObserver(Environment
-//                        .getExternalStorageDirectory().getAbsolutePath(),
+////                mFileObserver = new RecursiveFileObserver(Environment
+////                        .getExternalStorageDirectory().getAbsolutePath(),
+////                        FileObserver.CREATE);
+//                mFileObserver = new RecursiveFileObserver(MediaUtils.getStorageDir().getPath(),
 //                        FileObserver.CREATE);
-//                mFileObserver
-//                        .setFileCreatedListener(mOnFileCreatedListener);
+//
+////                mFileObserver
+////                        .setFileCreatedListener(mOnFileCreatedListener);
 //            }
 //            mFileObserver.startWatching();
 //            return null;

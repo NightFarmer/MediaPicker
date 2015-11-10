@@ -1,8 +1,8 @@
 package com.nightfarmer.mediapicker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -30,7 +30,7 @@ public class MediaPickActivity extends AppCompatActivity implements LoaderManage
     RecyclerView recyclerView;
     RecyclerView recyclerViewSelected;
 
-    List<MediaItem> dataList = new ArrayList<>();
+//    List<MediaItem> dataList = new ArrayList<>();
     List<MediaItem> selectedList;
 
     MediaItemGridAdapter adapter;
@@ -155,4 +155,15 @@ public class MediaPickActivity extends AppCompatActivity implements LoaderManage
             MediaStore.Images.Media._ID
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (Activity.RESULT_OK == resultCode){
+            Log.i("xx", adapter.fileHolder+"ok");
+            selectedList.add(new MediaItem(MediaItem.PHOTO, Uri.fromFile(adapter.fileHolder)));
+            recyclerViewSelected.scrollToPosition(selectedList.size());
+        }else if(Activity.RESULT_CANCELED == resultCode){
+            Log.i("xx", adapter.fileHolder+"cancel");
+        }
+    }
 }

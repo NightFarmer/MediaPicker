@@ -50,6 +50,10 @@ public class MediaItem implements Parcelable{
 
     boolean isChecked;
 
+    /**
+     * @param type 多媒体类型  {@link #PHOTO} 或者 {@link #VIDEO}
+     * @param uriOrigin 文件uri
+     */
     public MediaItem(int type, Uri uriOrigin) {
         this.type = type;
         this.uriOrigin = uriOrigin;

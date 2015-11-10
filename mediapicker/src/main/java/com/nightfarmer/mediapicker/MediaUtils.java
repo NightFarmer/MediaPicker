@@ -87,19 +87,30 @@ public class MediaUtils {
      * @return
      * @throws IOException
      */
-    public static File createDefaultImageFile(Context context) throws IOException {
+    public static File createDefaultImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + ".jpg";
 //        File storageDir = Environment
 //                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + File.separator + "Camera");
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-        prePath = storageDir;
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + File.separator + "Camera");
+//        if (!storageDir.exists()) {
+//            storageDir.mkdirs();
+//        }
+        File storageDir = getStorageDir();
+        if (storageDir == null) return null;
         return new File(storageDir, imageFileName);
     }
 
-    public static File prePath;
+    public static File getStorageDir() {
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + File.separator + "Camera");
+        File storageDir = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (!storageDir.exists()) {
+            boolean mkdirsSuccess = storageDir.mkdirs();
+            if (!mkdirsSuccess) return null;
+        }
+        return storageDir;
+    }
+
 }
