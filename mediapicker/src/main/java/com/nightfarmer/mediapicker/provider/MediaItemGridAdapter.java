@@ -1,4 +1,4 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.provider;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +19,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nightfarmer.mediapicker.R;
+import com.nightfarmer.mediapicker.bean.MediaItem;
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 
 import java.io.File;
@@ -36,7 +38,7 @@ public class MediaItemGridAdapter extends RecyclerViewCursorAdapter<MediaItemGri
 
     private List<MediaItem> selectedItemList;
 
-    File fileHolder;
+    public File fileHolder;
 
     private static final int REQUEST_PHOTO_CAPTURE = 100;
 //    private FileObserverTask mFileObserverTask;

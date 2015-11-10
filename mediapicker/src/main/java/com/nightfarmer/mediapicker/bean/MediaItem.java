@@ -1,4 +1,4 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.bean;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -8,15 +8,14 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.nightfarmer.mediapicker.provider.MediaUtils;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * 多媒体资源描述类
@@ -48,7 +47,7 @@ public class MediaItem implements Parcelable{
      */
     private Uri uriOrigin;
 
-    boolean isChecked;
+    public boolean isChecked;
 
     /**
      * @param type 多媒体类型  {@link #PHOTO} 或者 {@link #VIDEO}

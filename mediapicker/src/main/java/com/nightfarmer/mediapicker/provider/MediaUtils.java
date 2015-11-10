@@ -1,7 +1,6 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.provider;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;

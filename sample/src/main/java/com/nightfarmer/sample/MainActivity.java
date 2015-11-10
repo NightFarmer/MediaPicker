@@ -1,26 +1,17 @@
 package com.nightfarmer.sample;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.nightfarmer.mediapicker.MediaItem;
-import com.nightfarmer.mediapicker.MediaPickerAdapter;
-import com.nightfarmer.mediapicker.MediaPickerView;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nightfarmer.mediapicker.widget.MediaPickerView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 

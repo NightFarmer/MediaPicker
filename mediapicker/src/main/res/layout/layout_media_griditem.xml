@@ -7,7 +7,7 @@
     android:layout_marginRight="3dp"
     android:orientation="vertical">
 
-    <com.nightfarmer.mediapicker.MediaView
+    <com.nightfarmer.mediapicker.widget.MediaView
         android:layout_centerInParent="true"
         android:id="@+id/draweView"
         android:layout_width="100dp"

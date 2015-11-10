@@ -1,4 +1,4 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.provider;
 
 /*
  * Copyright (C) 2011 The Android Open Source Project

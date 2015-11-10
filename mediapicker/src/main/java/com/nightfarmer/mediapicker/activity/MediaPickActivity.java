@@ -1,4 +1,4 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nightfarmer.mediapicker.R;
+import com.nightfarmer.mediapicker.bean.MediaItem;
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
+import com.nightfarmer.mediapicker.provider.MediaItemClickListener;
+import com.nightfarmer.mediapicker.provider.MediaItemGridAdapter;
+import com.nightfarmer.mediapicker.provider.MediaPickerAdapter;
+import com.nightfarmer.mediapicker.widget.MediaPickerView;
 
 import java.util.ArrayList;
 import java.util.List;

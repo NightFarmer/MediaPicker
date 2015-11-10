@@ -1,4 +1,4 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.provider;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -9,14 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.nightfarmer.mediapicker.R;
+import com.nightfarmer.mediapicker.bean.MediaItem;
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 图片选择展示adapter
@@ -29,7 +29,7 @@ public class MediaPickerAdapter extends RecyclerView.Adapter<MediaPickerAdapter.
 
     private MediaItemClickListener mediaItemClickListener;
 
-    ArrayList<MediaItem> dataList = new ArrayList<>();
+    public ArrayList<MediaItem> dataList = new ArrayList<>();
 
     public MediaPickerAdapter(int orientation, MediaImageLoaderImpl mMediaImageLoader) {
         this.orientation = orientation;

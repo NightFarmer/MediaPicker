@@ -1,10 +1,9 @@
-package com.nightfarmer.mediapicker;
+package com.nightfarmer.mediapicker.widget;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -14,10 +13,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.nightfarmer.mediapicker.R;
+import com.nightfarmer.mediapicker.activity.MediaPickActivity;
+import com.nightfarmer.mediapicker.bean.MediaItem;
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
-import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.nightfarmer.mediapicker.provider.MediaItemClickListener;
+import com.nightfarmer.mediapicker.provider.MediaPickerAdapter;
 
-import java.io.File;
 import java.util.ArrayList;
 
 

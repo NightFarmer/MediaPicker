@@ -5,7 +5,7 @@
     android:layout_margin="3dp"
     android:background="#626466">
 
-    <com.nightfarmer.mediapicker.MediaView
+    <com.nightfarmer.mediapicker.widget.MediaView
         android:layout_centerInParent="true"
         android:layout_width="100dp"
         android:layout_height="100dp"
