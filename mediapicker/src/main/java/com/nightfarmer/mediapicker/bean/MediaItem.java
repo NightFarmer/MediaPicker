@@ -21,7 +21,7 @@ import java.io.IOException;
  * 多媒体资源描述类
  * Created by zhangfan on 2015/10/26.
  */
-public class MediaItem implements Parcelable{
+public class MediaItem implements Parcelable {
 
 
     /**
@@ -50,7 +50,7 @@ public class MediaItem implements Parcelable{
     public boolean isChecked;
 
     /**
-     * @param type 多媒体类型  {@link #PHOTO} 或者 {@link #VIDEO}
+     * @param type      多媒体类型  {@link #PHOTO} 或者 {@link #VIDEO}
      * @param uriOrigin 文件uri
      */
     public MediaItem(int type, Uri uriOrigin) {
@@ -64,7 +64,7 @@ public class MediaItem implements Parcelable{
         if (cache == null || cache.isRecycled()) {
             File bmp_catch = StorageUtils.getIndividualCacheDirectory(context, "bmp_catch");
             try {
-                File file = new File(bmp_catch, uriOrigin.toString().hashCode()+"");
+                File file = new File(bmp_catch, uriOrigin.toString().hashCode() + "");
                 if (!file.exists()) return null;
                 FileInputStream fileInputStream = new FileInputStream(file);
                 cache = BitmapFactory.decodeStream(fileInputStream);
@@ -76,14 +76,15 @@ public class MediaItem implements Parcelable{
         return cache;
     }
 
-    public void setCache(Bitmap cache, Context context) {
+    public void setCache(Bitmap cache, Context context, boolean fileCache) {
         this.cache = Bitmap.createBitmap(cache);
+        if (!fileCache) return;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         cache.compress(Bitmap.CompressFormat.PNG, 0, baos);//压缩位图
         byte[] cacheBytes = baos.toByteArray();//创建分配字节数组
         File bmp_catch = StorageUtils.getIndividualCacheDirectory(context, "bmp_catch");
         try {
-            File file = new File(bmp_catch, uriOrigin.toString().hashCode()+"");
+            File file = new File(bmp_catch, uriOrigin.toString().hashCode() + "");
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(cacheBytes);
             fileOutputStream.flush();

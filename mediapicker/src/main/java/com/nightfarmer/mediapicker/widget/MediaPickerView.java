@@ -64,7 +64,7 @@ public class MediaPickerView extends RelativeLayout {
         addView(recyclerView);
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), orientation, false));
-        adapter = new MediaPickerAdapter(orientation, MediaImageLoaderImpl.getInstance(getContext()));
+        adapter = new MediaPickerAdapter(orientation, MediaImageLoaderImpl.getInstance(getContext()), true);
         recyclerView.setAdapter(adapter);
         adapter.setMediaItemClickListener(new MediaPickedItemClickListener());
         final ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();

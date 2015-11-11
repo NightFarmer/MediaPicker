@@ -70,11 +70,11 @@ public class MediaPickActivity extends AppCompatActivity implements LoaderManage
                 final MediaItem tag = (MediaItem) view.getTag();
                 if (checked) {
                     View img = (View) view.getTag(R.id.draweView);
-                    if (img != null) {
-                        img.setDrawingCacheEnabled(true);
-                        tag.setCache(img.getDrawingCache(), MediaPickActivity.this);
-                        img.setDrawingCacheEnabled(false);
-                    }
+//                    if (img != null) {
+//                        img.setDrawingCacheEnabled(true);
+//                        tag.setCache(img.getDrawingCache(), MediaPickActivity.this);
+//                        img.setDrawingCacheEnabled(false);
+//                    }
                     selectedList.add(tag);
                     selectedAdapter.notifyItemInserted(selectedList.indexOf(tag));
                     recyclerViewSelected.scrollToPosition(selectedList.size());
@@ -90,7 +90,7 @@ public class MediaPickActivity extends AppCompatActivity implements LoaderManage
 
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL, mMediaImageLoader);
+        selectedAdapter = new MediaPickerAdapter(LinearLayout.HORIZONTAL, mMediaImageLoader, false);
         selectedList = selectedAdapter.dataList;
         recyclerViewSelected.setAdapter(selectedAdapter);
         selectedAdapter.setMediaItemClickListener(new MediaItemClickListener() {

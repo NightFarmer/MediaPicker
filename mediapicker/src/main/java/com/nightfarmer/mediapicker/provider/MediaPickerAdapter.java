@@ -25,15 +25,17 @@ import java.util.ArrayList;
 public class MediaPickerAdapter extends RecyclerView.Adapter<MediaPickerAdapter.MediaPickedItemHolder> {
     private final MediaImageLoaderImpl mMediaImageLoader;
     private int orientation;
+    private boolean fileCache;
 
 
     private MediaItemClickListener mediaItemClickListener;
 
     public ArrayList<MediaItem> dataList = new ArrayList<>();
 
-    public MediaPickerAdapter(int orientation, MediaImageLoaderImpl mMediaImageLoader) {
+    public MediaPickerAdapter(int orientation, MediaImageLoaderImpl mMediaImageLoader, boolean fileCache) {
         this.orientation = orientation;
         this.mMediaImageLoader = mMediaImageLoader;
+        this.fileCache = fileCache;
     }
 
     @Override
@@ -98,7 +100,7 @@ public class MediaPickerAdapter extends RecyclerView.Adapter<MediaPickerAdapter.
                                 public void run() {
                                     final MediaItem tag = (MediaItem) holder.imageView.getTag();
                                     view.setDrawingCacheEnabled(true);
-                                    tag.setCache(view.getDrawingCache(), holder.imageView.getContext());
+                                    tag.setCache(view.getDrawingCache(), holder.imageView.getContext(), fileCache);
                                     view.setDrawingCacheEnabled(false);
                                     final Bitmap cache = tag.getCache(holder.imageView.getContext());
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
