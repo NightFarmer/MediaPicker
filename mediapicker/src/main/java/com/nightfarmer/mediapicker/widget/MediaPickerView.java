@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.nightfarmer.mediapicker.R;
+import com.nightfarmer.mediapicker.activity.MediaHandlerActivity;
 import com.nightfarmer.mediapicker.activity.MediaPickActivity;
 import com.nightfarmer.mediapicker.bean.MediaItem;
 import com.nightfarmer.mediapicker.imageloader.MediaImageLoaderImpl;
@@ -31,6 +32,8 @@ public class MediaPickerView extends RelativeLayout {
 
     public static final int REQUST_CODE = MediaPickerView.class.hashCode() % 10000;
     public static final String RESULT = "MediaPickerViewResult";
+    public static final String CURRENT = "MediaPickerViewCurrent";
+    private final Context context;
 
     private int orientation;
 
@@ -47,6 +50,7 @@ public class MediaPickerView extends RelativeLayout {
 
     public MediaPickerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MediaPickerView, defStyleAttr, 0);
         for (int i = 0; i < typedArray.getIndexCount(); i++) {
             int attr = typedArray.getIndex(i);
@@ -98,18 +102,23 @@ public class MediaPickerView extends RelativeLayout {
 
         @Override
         public void onClick(View v, int type) {
+            Activity activity = (Activity) v.getContext();
             switch (type) {
                 case TYPE_END:
                     //add
-                    Activity activity = (Activity) v.getContext();
-                    Intent intent = new Intent(v.getContext(), MediaPickActivity.class);
-                    intent.putParcelableArrayListExtra(RESULT, adapter.dataList);
-                    activity.startActivityForResult(intent, REQUST_CODE);
+                    Intent intent1 = new Intent(v.getContext(), MediaPickActivity.class);
+                    intent1.putParcelableArrayListExtra(RESULT, adapter.dataList);
+                    activity.startActivityForResult(intent1, REQUST_CODE);
                     break;
                 case TYPE_MEDIA:
                     //show
                     MediaItem data = (MediaItem) v.getTag();
-                    Toast.makeText(v.getContext(), "" + data.getUriOrigin(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(v.getContext(), "" + data.getUriOrigin(), Toast.LENGTH_SHORT).show();
+                    Intent intent2 = new Intent(v.getContext(), MediaHandlerActivity.class);
+                    intent2.putParcelableArrayListExtra(RESULT, adapter.dataList);
+                    intent2.putExtra(CURRENT, data);
+                    activity.startActivityForResult(intent2, REQUST_CODE);
+//                    activity.startActivity(new );
                     break;
             }
         }

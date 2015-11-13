@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nightfarmer.mediapicker" >
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MediaApplication"
@@ -14,6 +14,10 @@
         <activity
             android:name=".activity.MediaPickActivity"
             android:label="@string/title_activity_media_pick" >
+        </activity>
+        <activity
+            android:name=".activity.MediaHandlerActivity"
+            android:label="@string/title_activity_media_handler" >
         </activity>
     </application>
 
