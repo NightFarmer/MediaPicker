@@ -13,7 +13,10 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activity.MediaPickActivity"
-            android:label="@string/title_activity_media_pick" >
+            android:label="@string/title_activity_media_pick"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            >
+
         </activity>
         <activity
             android:name=".activity.MediaHandlerActivity"
