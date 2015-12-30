@@ -12,6 +12,7 @@
         <activity
             android:name=".activity.MediaPickActivity"
             android:label="@string/title_activity_media_pick"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"
             >
 
